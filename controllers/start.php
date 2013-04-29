@@ -18,7 +18,6 @@ class startController extends \StudipController {
 		$layout = $GLOBALS['template_factory']->open('layouts/base');
 		//$layout =  "ajax/layout";
 		$this->set_layout($layout);
-		PageLayout::addScript( $this->flash->vmurl  . '/assets/js/start.js');
 
 	}
 

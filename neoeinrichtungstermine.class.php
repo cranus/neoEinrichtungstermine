@@ -19,6 +19,7 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 		$this->flash->vmurl = $this->getPluginURL();
 		$this->flash->instid = $this->checkInstitute((!empty($_GET["cid"]) ? $_GET["cid"] : (empty($SessSemName[1]) ? $_GET["auswahl"] : $SessSemName[1]))); //ToDO: Das geht bestimmt besser
 		$this->createnav();
+
 	}
 
 	/**
@@ -41,6 +42,15 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 
 			$navigation = new AutoNavigation(_("Einrichtungstermine"), PluginEngine::getURL($this, array(), "start"));
 			Navigation::addItem('/course/insttermin', clone $navigation);
+
+			$navday = new AutoNavigation(_("Tag"), PluginEngine::getURL($this, array(), "start/dayview"));
+			Navigation::addItem('/course/insttermin/day', clone $navday);
+
+			$navweek = new AutoNavigation(_("Woche"), PluginEngine::getURL($this, array(), "start"));
+			Navigation::addItem('/course/insttermin/week', clone $navweek);
+
+			$navmonth = new AutoNavigation(_("Monat"), PluginEngine::getURL($this, array(), "start/monthview"));
+			Navigation::addItem('/course/insttermin/month', clone $navmonth);
 		}
 
 	}
