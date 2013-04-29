@@ -1,0 +1,4 @@
+Einrichtungstermine:
+<?= $instid ?>
+
+<?= $plan ?>

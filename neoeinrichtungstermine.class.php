@@ -17,7 +17,7 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 		unset($GLOBALS["plugin_pfad"]);
 		$this->flash = Trails_Flash::instance();
 		$this->flash->vmurl = $this->getPluginURL();
-		$this->flash->instid = checkInstitute((!empty($_GET["cid"]) ? $_GET["cid"] : (empty($SessSemName[1]) ? $_GET["auswahl"] : $SessSemName[1]))); //ToDO: Das geht bestimmt besser
+		$this->flash->instid = $this->checkInstitute((!empty($_GET["cid"]) ? $_GET["cid"] : (empty($SessSemName[1]) ? $_GET["auswahl"] : $SessSemName[1]))); //ToDO: Das geht bestimmt besser
 		$this->createnav();
 	}
 
@@ -35,8 +35,11 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 
 	function createnav() {
 
-		if($this->flash->instid) {
-			$navigation = new AutoNavigation("_(Einrichtungstermine)", PluginEngine::getURL($this, array(), "start"));
+		if(!$this->flash->instid AND Navigation::hasItem("/course")) {
+			$course = Navigation::getItem('/course');
+			$course->setEnabled(0);
+
+			$navigation = new AutoNavigation(_("Einrichtungstermine"), PluginEngine::getURL($this, array(), "start"));
 			Navigation::addItem('/course/insttermin', clone $navigation);
 		}
 
@@ -45,10 +48,18 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 	function checkInstitute ($id) {
 		$inst = new Institute($id);
 		$fkid = $inst->getValue('fakultaets_id');
-		if(empty($fkid)) return false;
-		else {
+		if(!empty($fkid)) {
+
 			return $id;
 		}
+		else {
+			return true;
+		}
+	}
+
+	function getPluginname()
+	{
+		return $this->pluginname; //HFWU Change
 	}
 
 
