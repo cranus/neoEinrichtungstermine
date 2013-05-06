@@ -32,16 +32,22 @@ class vldaten {
 
 	function getAllVlsWeek($day = false) {
 		if(!$day) $day = time();
+		if(isset($_REQUEST["week"]) AND is_numeric($_REQUEST["week"])) {
+			$day = $day + $_REQUEST["week"] * (86400*7);
+		}
 		//Montag errechnen
 		$tag = date("N", $day);
 		$montag = $day - 86400*($tag - 1);
-		echo date("N", $montag)."<br>";
 		$termine = array();
 		for($i=0; $i <= "6"; $i++) {
-			$temp = $this->getAllVlsDay($montag+86400*$i);
+			$temp_day = $montag+86400*$i;
+			$temp = $this->getAllVlsDay($temp_day);
 			$termine = array_merge($termine, $temp);
+			$this->flash->end = $temp_day;
 
 		}
+		$this->flash->start = $montag;
+
 		return $termine;
 	}
 
