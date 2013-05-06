@@ -18,7 +18,6 @@ class startController extends \StudipController {
 		$layout = $GLOBALS['template_factory']->open('layouts/base');
 		//$layout =  "ajax/layout";
 		$this->set_layout($layout);
-
 	}
 
 	public function index_action() {
@@ -40,6 +39,7 @@ class startController extends \StudipController {
 			);
 		}
 		$this->plan = $this->renderPlan($entry);
+		$this->debug = $this->flash->debug;
 	}
 
 
@@ -70,34 +70,31 @@ class startController extends \StudipController {
 		$plan = new CalendarView();
 		$plan->setRange("6","21");
 
-
+		$plan->addColumn(_('Montag'));
 		if(sizeof($termine[1]) > "0") {
-			$plan->addColumn(_('Montag'));
+
 			foreach($termine[1] as $date) $plan->addEntry($date);
 		}
 
-
+		$plan->addColumn(_('Dienstag'));
 		if(sizeof($termine[2]) > "0") {
-			$plan->addColumn(_('Dienstag'));
 			foreach($termine[2] as $date) $plan->addEntry($date);
 		}
 
-
+		$plan->addColumn(_('Mittwoch'));
 		if(sizeof($termine[3]) > "0") {
 			$plan->addColumn(_('Mittwoch'));
 			foreach($termine[3] as $date) $plan->addEntry($date);
 		}
 
-
+		$plan->addColumn(_('Donnerstag'));
 		if(sizeof($termine[4]) > "0") {
-			$plan->addColumn(_('Donnerstag'));
 			foreach($termine[4] as $date)
 				$plan->addEntry($date);
 		}
 
-
+		$plan->addColumn(_('Freitag'));
 		if(sizeof($termine[5]) > "0") {
-			$plan->addColumn(_('Freitag'));
 			foreach($termine[5] as $date) {
 				$plan->addEntry($date);
 			}

@@ -2,3 +2,5 @@ Einrichtungstermine:
 <?= $instid ?>
 
 <?= $plan ?>
+
+<?= $debug ?>

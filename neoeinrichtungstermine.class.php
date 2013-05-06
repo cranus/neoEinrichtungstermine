@@ -13,12 +13,13 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 
 	function __construct()
 	{
-		parent::__construct();
+
 		unset($GLOBALS["plugin_pfad"]);
 		$this->flash = Trails_Flash::instance();
 		$this->flash->vmurl = $this->getPluginURL();
 		$this->flash->instid = $this->checkInstitute((!empty($_GET["cid"]) ? $_GET["cid"] : (empty($SessSemName[1]) ? $_GET["auswahl"] : $SessSemName[1]))); //ToDO: Das geht bestimmt besser
 		$this->createnav();
+		parent::__construct();
 
 	}
 
@@ -35,14 +36,10 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 	}
 
 	function createnav() {
-
-		if(!$this->flash->instid AND Navigation::hasItem("/course")) {
-			$course = Navigation::getItem('/course');
-			$course->setEnabled(0);
-
+		try{
 			$navigation = new AutoNavigation(_("Einrichtungstermine"), PluginEngine::getURL($this, array(), "start"));
 			Navigation::addItem('/course/insttermin', clone $navigation);
-
+			Navigation::addItem('/insttermin', clone $navigation);
 			$navday = new AutoNavigation(_("Tag"), PluginEngine::getURL($this, array(), "start/dayview"));
 			Navigation::addItem('/course/insttermin/day', clone $navday);
 
@@ -51,8 +48,8 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 
 			$navmonth = new AutoNavigation(_("Monat"), PluginEngine::getURL($this, array(), "start/monthview"));
 			Navigation::addItem('/course/insttermin/month', clone $navmonth);
-		}
 
+		} catch(Exception $ex) {}
 	}
 
 	function checkInstitute ($id) {
