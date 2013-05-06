@@ -13,7 +13,6 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 
 	function __construct()
 	{
-
 		unset($GLOBALS["plugin_pfad"]);
 		$this->flash = Trails_Flash::instance();
 		$this->flash->vmurl = $this->getPluginURL();
