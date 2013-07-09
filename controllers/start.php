@@ -18,7 +18,7 @@ class startController extends \StudipController {
 		$layout = $GLOBALS['template_factory']->open('layouts/base');
 		//$layout =  "ajax/layout";
 		$this->set_layout($layout);
-		PageLayout::addScript($this->flash->vmurl . 'neo/neoeinrichtungstermine/assets/neoET.js');
+		PageLayout::addScript($this->flash->net->url . 'neo/neoeinrichtungstermine/assets/neoET.js');
 	}
 
 	public function index_action() {
@@ -26,6 +26,7 @@ class startController extends \StudipController {
 		$this->instid = $this->flash->instid;
 		$vldaten = new vldaten();
 		$termine = $vldaten->getAllVlsWeek($day);
+		$entry = array(1 => array() ,2 => array(),3 => array(),4 => array(),5 => array(),6 => array(),7 => array());
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
 			$name = $t["Name"]." - ".$typ["name"];
@@ -41,6 +42,7 @@ class startController extends \StudipController {
 				'onClick' => "function() { showdetails('".$t["id"]."'); }"
 			);
 		}
+		print_r($entry);
 		$this->plan = $this->renderPlan($entry);
 		$this->debug = $this->flash->debug;
 	}
@@ -70,43 +72,41 @@ class startController extends \StudipController {
 				'onClick' => "function() { alert('".$t["termin_id"]."'); }"
 			);
 		}
-		$this->plan = $this->renderPlan($entry);
+		$this->plan = $this->renderPlan($entry, "day");
 	}
 
-	function renderPlan($termine) {
+	function renderPlan($termine, $plantyp = "week") {
 		$plan = new CalendarView();
 		$plan->setRange("6","21");
 
 
-		if(sizeof($termine[1]) > "0") {
+		if(sizeof($termine[1]) > "0" OR $plantyp == "week") {
 			$plan->addColumn(_('Montag'));
 			foreach($termine[1] as $date) $plan->addEntry($date);
 		}
 
 
-		if(sizeof($termine[2]) > "0") {
+		if(sizeof($termine[2]) > "0" OR $plantyp == "week") {
 			$plan->addColumn(_('Dienstag'));
 			foreach($termine[2] as $date) $plan->addEntry($date);
 		}
 
-		if(sizeof($termine[3]) > "0") {
+		if(sizeof($termine[3]) > "0" OR $plantyp == "week") {
 			$plan->addColumn(_('Mittwoch'));
 			foreach($termine[3] as $date) $plan->addEntry($date);
 		}
 
 
-		if(sizeof($termine[4]) > "0") {
+		if(sizeof($termine[4]) > "0" OR $plantyp == "week") {
 			$plan->addColumn(_('Donnerstag'));
-			foreach($termine[4] as $date)
-				$plan->addEntry($date);
+			foreach($termine[4] as $date) 	$plan->addEntry($date);
 		}
 
 
-		if(sizeof($termine[5]) > "0") {
+		if(sizeof($termine[5]) > "0" OR $plantyp == "week") {
 			$plan->addColumn(_('Freitag'));
-			foreach($termine[5] as $date) {
-				$plan->addEntry($date);
-			}
+			foreach($termine[5] as $date)  $plan->addEntry($date);
+
 		}
 
 		if(sizeof($termine[6]) > "0") {
