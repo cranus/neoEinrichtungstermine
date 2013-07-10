@@ -11,17 +11,17 @@ class vldaten {
 
 	}
 
-	function getAllVlsDay($day = false) {
+	function getAllVlsDay($day = false, $instid = false) {
+		if(!$instid) $instid = $this->flash->instid;
 		if(!$day) $day = time();
 		$day = mktime('6','00','00', date("n", $day), date("j", $day), date("Y", $day));
 		$dayend = $day+86399;
-		//print_r($day." ".$dayend);
 		$db = DBManager::get();
 		$sql = "SELECT * ".
 					"FROM `termine` ".
 					"INNER JOIN seminar_inst ON seminar_inst.seminar_id = termine.range_id ".
 					"INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
-					"WHERE seminar_inst.institut_id = '".$this->flash->instid."' AND ".
+					"WHERE seminar_inst.institut_id = '".$instid."' AND ".
 					"date BETWEEN ".$day." AND ".$dayend. " ";
 					"ORDER BY date ".
 					"LIMIT 30";

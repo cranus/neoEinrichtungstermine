@@ -18,6 +18,7 @@ class startController extends \StudipController {
 		$layout = $GLOBALS['template_factory']->open('layouts/base');
 		//$layout =  "ajax/layout";
 		$this->set_layout($layout);
+		$this->instid = (!empty($_GET["cid"]) ? $_GET["cid"] : (empty($SessSemName[1]) ? $_GET["auswahl"] : $SessSemName[1]));
 		PageLayout::addScript($this->flash->net->url . 'neo/neoeinrichtungstermine/assets/neoET.js');
 	}
 
@@ -42,21 +43,23 @@ class startController extends \StudipController {
 				'onClick' => "function() { showdetails('".$t["id"]."'); }"
 			);
 		}
-		print_r($entry);
 		$this->plan = $this->renderPlan($entry);
-		$this->debug = $this->flash->debug;
 	}
 
 
 	public function dayview_action() {
 
-		if(isset($_REQUEST["day"])) $day = time()+($_REQUEST["day"]*86400);
+		if(isset($_REQUEST["day"])) {
+			if($_REQUEST["datum"]) $day = $this->DatumToDate($_REQUEST["datum"])+($_REQUEST["day"]*86400);
+			else $day = time()+($_REQUEST["day"]*86400);
+		}
 		elseif($_REQUEST["datum"]) $day = $this->DatumToDate($_REQUEST["datum"]);
 		else $day = time();
+		$this->flash->debug = "Inst-Id: " . $this->flash->instid . " -> " . $this->instid;
 		$this->flash->start = $day;
 		$this->instid = $this->flash->instid;
 		$vldaten = new vldaten();
-		$termine = $vldaten->getAllVlsDay($day);
+		$termine = $vldaten->getAllVlsDay($day, $this->instid);
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
 			$name = $t["Name"]." - ".$typ["name"];
@@ -72,8 +75,11 @@ class startController extends \StudipController {
 				'onClick' => "function() { alert('".$t["termin_id"]."'); }"
 			);
 		}
+		//$this->debug = $this->flash->debug;
 		$this->plan = $this->renderPlan($entry, "day");
 	}
+
+
 
 	function renderPlan($termine, $plantyp = "week") {
 		$plan = new CalendarView();
