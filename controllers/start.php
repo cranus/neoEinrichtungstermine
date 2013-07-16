@@ -23,10 +23,18 @@ class startController extends \StudipController {
 	}
 
 	public function index_action() {
-	  if(isset($_REQUEST["datum"])) $day = $this->DatumToDate($_REQUEST["datum"]);
+		$day = $this->getDate();
+		$this->debug = $day;
 		$this->instid = $this->flash->instid;
+
+		//Montag errechnen
+		$tag = date("N", $day);
+		$montag = $day - 86400*($tag - 1);
+		$this->start= $montag;
+		$this->end = $montag+(86400*6);
+
 		$vldaten = new vldaten();
-		$termine = $vldaten->getAllVlsWeek($day);
+		$termine = $vldaten->getAllVlsWeek($day, $montag);
 		$entry = array(1 => array() ,2 => array(),3 => array(),4 => array(),5 => array(),6 => array(),7 => array());
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
@@ -44,17 +52,13 @@ class startController extends \StudipController {
 			);
 		}
 		$this->plan = $this->renderPlan($entry);
+
+
 	}
 
 
 	public function dayview_action() {
-
-		if(isset($_REQUEST["day"])) {
-			if($_REQUEST["datum"]) $day = $this->DatumToDate($_REQUEST["datum"])+($_REQUEST["day"]*86400);
-			else $day = time()+($_REQUEST["day"]*86400);
-		}
-		elseif($_REQUEST["datum"]) $day = $this->DatumToDate($_REQUEST["datum"]);
-		else $day = time();
+		$day = $this->getDate();
 		$this->flash->debug = "Inst-Id: " . $this->flash->instid . " -> " . $this->instid;
 		$this->flash->start = $day;
 		$this->instid = $this->flash->instid;
@@ -77,6 +81,7 @@ class startController extends \StudipController {
 		}
 		//$this->debug = $this->flash->debug;
 		$this->plan = $this->renderPlan($entry, "day");
+
 	}
 
 
@@ -144,6 +149,25 @@ class startController extends \StudipController {
 	private function DatumToDate($datum) {
 		return mktime("00","00","01",$datum["3"].$datum["4"],$datum["0"].$datum["1"],$datum["6"].$datum["7"].$datum["8"].$datum["9"]);
 
+	}
+
+	/*
+	 * Erstellt aus den möglichen übergebenen Werten das Datum
+	 *
+	 * return array Anfangs und End Datum
+	 */
+
+	private function getDate() {
+		if(isset($_REQUEST["day"])) {
+			if($_REQUEST["datum"]) {
+				$day = $this->DatumToDate($_REQUEST["datum"])+($_REQUEST["day"]*86400);
+			}
+			else $day = time()+($_REQUEST["day"]*86400);
+
+		}
+		elseif($_REQUEST["datum"]) $day = $this->DatumToDate($_REQUEST["datum"]);
+		else $day = time();
+		return $day;
 	}
 
 

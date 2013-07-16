@@ -30,14 +30,13 @@ class vldaten {
 		return $termine;
 	}
 
-	function getAllVlsWeek($day = false) {
-		if(!$day) $day = time();
-		if(isset($_REQUEST["week"]) AND is_numeric($_REQUEST["week"])) {
-			$day = $day + $_REQUEST["week"] * (86400*7);
+	function getAllVlsWeek($day = false, $montag) {
+		if(!$day)  {
+			$day = time();
 		}
-		//Montag errechnen
-		$tag = date("N", $day);
-		$montag = $day - 86400*($tag - 1);
+		/*if(isset($_REQUEST["week"]) AND is_numeric($_REQUEST["week"])) { //TODO: Löschen
+			$day = $day + $_REQUEST["week"] * (86400*7);
+		}*/
 		$termine = array();
 		for($i=0; $i <= "6"; $i++) {
 			$temp_day = $montag+86400*$i;
