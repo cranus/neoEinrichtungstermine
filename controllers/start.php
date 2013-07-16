@@ -24,7 +24,6 @@ class startController extends \StudipController {
 
 	public function index_action() {
 		$day = $this->getDate();
-		$this->debug = $day;
 		$this->instid = $this->flash->instid;
 
 		//Montag errechnen
