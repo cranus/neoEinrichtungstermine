@@ -2,8 +2,8 @@
 	Einrichtungstermine:
 </h1>
 <h2>
-	Von: <?= date("D - d.m.Y", $this->start) ?> -
-	Bis: <?= date("D - d.m.Y", $this->end) ?>
+    Von: <?= strftime("%a - %d.%m.%G", $this->start) ?> -
+    Bis: <?= strftime("%a - %d.%m.%G", $this->end) ?>
 </h2>
 <div id="neoeinrichtungstermine_menue">
 	<div style="float:left; width: 20%">

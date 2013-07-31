@@ -2,7 +2,7 @@
 	Einrichtungstermine:
 </h1>
 <h2>
-	Am: <?= date("D - d.m.Y", $this->flash->start) ?>
+	Am: <?= strftime("%a - %d.%m.%G", $this->flash->start) ?>
 </h2>
 <div id="neoeinrichtungstermine_menue">
 	<div style="float:left; width: 20%">

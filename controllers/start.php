@@ -151,7 +151,7 @@ class startController extends \StudipController {
 	}
 
 	/*
-	 * Erstellt aus den möglichen übergebenen Werten das Datum
+	 * Erstellt aus den mï¿½glichen ï¿½bergebenen Werten das Datum
 	 *
 	 * return array Anfangs und End Datum
 	 */

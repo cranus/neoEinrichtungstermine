@@ -47,8 +47,8 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 				$navweek = new AutoNavigation(_("Woche"), PluginEngine::getURL($this, array(), "start"));
 				Navigation::addItem('/course/insttermin/week', clone $navweek);
 	
-				$navmonth = new AutoNavigation(_("Monat"), PluginEngine::getURL($this, array(), "start/monthview"));
-				Navigation::addItem('/course/insttermin/month', clone $navmonth);
+				//$navmonth = new AutoNavigation(_("Monat"), PluginEngine::getURL($this, array(), "start/monthview"));
+				//Navigation::addItem('/course/insttermin/month', clone $navmonth);
 			}
 
 		} catch(Exception $ex) {}
@@ -69,7 +69,7 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 
 	function getPluginname()
 	{
-		return $this->pluginname; //HFWU Change
+		return $this->pluginname;
 	}
 
 
