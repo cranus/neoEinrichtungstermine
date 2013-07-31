@@ -23,8 +23,11 @@ class startController extends \StudipController {
 	}
 
 	public function index_action() {
+
 		$day = $this->getDate();
 		$this->instid = $this->flash->instid;
+        $inst = new Institute($this->instid);
+        PageLayout::setTitle($inst->Name.' - Einrichtungstermine / Wochenansicht');
 
 		//Montag errechnen
 		$tag = date("N", $day);
@@ -61,6 +64,8 @@ class startController extends \StudipController {
 		$this->flash->debug = "Inst-Id: " . $this->flash->instid . " -> " . $this->instid;
 		$this->flash->start = $day;
 		$this->instid = $this->flash->instid;
+        $inst = new Institute($this->instid);
+        PageLayout::setTitle($inst->Name.' - Einrichtungstermine / Tagesansicht');
 		$vldaten = new vldaten();
 		$termine = $vldaten->getAllVlsDay($day, $this->instid);
 		foreach($termine as $t) {
@@ -151,7 +156,7 @@ class startController extends \StudipController {
 	}
 
 	/*
-	 * Erstellt aus den m�glichen �bergebenen Werten das Datum
+	 * Erstellt aus den m?glichen ?bergebenen Werten das Datum
 	 *
 	 * return array Anfangs und End Datum
 	 */
