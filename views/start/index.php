@@ -23,3 +23,7 @@
 	<?= $debug ?>
 </div>
 
+<div id='neoet_details'>
+
+
+</div>

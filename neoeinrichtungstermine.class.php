@@ -44,7 +44,7 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 				$navday = new AutoNavigation(_("Tag"), PluginEngine::getURL($this, array(), "start/dayview"));
 				Navigation::addItem('/course/insttermin/day', clone $navday);
 
-				$navweek = new AutoNavigation(_("Woche"), PluginEngine::getURL($this, array(), "start"));
+				$navweek = new AutoNavigation(_("Woche"), PluginEngine::getURL($this, array(), "start/index"));
 				Navigation::addItem('/course/insttermin/week', clone $navweek);
 	
 				//$navmonth = new AutoNavigation(_("Monat"), PluginEngine::getURL($this, array(), "start/monthview"));

@@ -21,3 +21,8 @@
 <div id="neoeinrichtungstermine_debug" style="width: 100%;float: left">
 	<?= $debug ?>
 </div>
+
+<div id='neoet_details'>
+
+
+</div>

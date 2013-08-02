@@ -50,7 +50,7 @@ class startController extends \StudipController {
 				'start' => $start,
 				'end' => $ende,
 				'title' => $name,
-				'onClick' => "function() { showdetails('".$t["id"]."'); }"
+				'onClick' => "function() {  showdetails('".$t["termin_id"]."');}"
 			);
 		}
 		$this->plan = $this->renderPlan($entry);
@@ -80,7 +80,7 @@ class startController extends \StudipController {
 				'start' => $start,
 				'end' => $ende,
 				'title' => $name,
-				'onClick' => "function() { alert('".$t["termin_id"]."'); }"
+				'onClick' => "function() { showdetails('".$t["termin_id"]."');}"
 			);
 		}
 		//$this->debug = $this->flash->debug;

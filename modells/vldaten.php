@@ -25,7 +25,7 @@ class vldaten {
 					"date BETWEEN ".$day." AND ".$dayend. " ";
 					"ORDER BY date ".
 					"LIMIT 30";
-		$this->flash->debug .= $sql."<br>";
+		//$this->flash->debug .= $sql."<br>";
 		$termine = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 		return $termine;
 	}
@@ -34,7 +34,7 @@ class vldaten {
 		if(!$day)  {
 			$day = time();
 		}
-		/*if(isset($_REQUEST["week"]) AND is_numeric($_REQUEST["week"])) { //TODO: Löschen
+		/*if(isset($_REQUEST["week"]) AND is_numeric($_REQUEST["week"])) { //TODO: Lï¿½schen
 			$day = $day + $_REQUEST["week"] * (86400*7);
 		}*/
 		$termine = array();
@@ -49,6 +49,21 @@ class vldaten {
 
 		return $termine;
 	}
+
+    function getDetails($terminid) {
+        $db = DBManager::get();
+        $sql = "SELECT * ".
+            "FROM `termine` ".
+            "INNER JOIN seminar_inst ON seminar_inst.seminar_id = termine.range_id ".
+            "INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
+            "WHERE seminar_inst.institut_id = '".$instid."' AND ".
+            "date BETWEEN ".$day." AND ".$dayend. " ";
+        "ORDER BY date ".
+        "LIMIT 30";
+        return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+
+
+    }
 
 
 }
