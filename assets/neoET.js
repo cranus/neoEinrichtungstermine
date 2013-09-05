@@ -1,7 +1,7 @@
-function showdetails(id,level) {
+function showdetails(id) {
     $.ajax({
         type: "POST",
-        url:level+"/ajax/details", //ToDo: Geht nicht wenn man eine unterseite offen hat
+        url:"/neo/public/plugins.php/neoeinrichtungstermine/ajax/details", //ToDo auf Livesystem anpassen
         data: { cmd: "renderDetails", id: id }
     }).done(function(data) {
             $('#neoet_details').html(data);
