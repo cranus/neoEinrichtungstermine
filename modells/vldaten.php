@@ -54,9 +54,6 @@ class vldaten {
 		if(!$day)  {
 			$day = time();
 		}
-		/*if(isset($_REQUEST["week"]) AND is_numeric($_REQUEST["week"])) { //TODO: L�schen
-			$day = $day + $_REQUEST["week"] * (86400*7);
-		}*/
 		$termine = array();
 		for($i=0; $i <= "6"; $i++) {
 			$temp_day = $montag+86400*$i;
@@ -70,20 +67,49 @@ class vldaten {
 		return $termine;
 	}
 
-    function getDetails($terminid) {
-        $db = DBManager::get();
-        $sql = "SELECT * ".
-            "FROM `termine` ".
-            "INNER JOIN seminar_inst ON seminar_inst.seminar_id = termine.range_id ".
-            "INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
-            "WHERE seminar_inst.institut_id = '".$instid."' AND ".
-            "date BETWEEN ".$day." AND ".$dayend. " ";
-        "ORDER BY date ".
-        "LIMIT 30";
-        return $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-
-
+    public function getTerminInfos($terminid) {
+        $sql = "SELECT termine.raum AS raum_frei, seminare.name, seminare.VeranstaltungsNummer, seminare.Seminar_id, termine.date, termine.end_time FROM `termine`
+                INNER JOIN seminare on seminare.Seminar_id = termine.range_id
+                WHERE termine.termin_id = ?";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($terminid));
+        return $result = $db->fetchAll();
     }
 
 
+    public function getInstituteBySemid($semid) {
+        $sql = "SELECT Institute.Name "
+            ."FROM `seminar_inst` "
+            ."INNER JOIN Institute on Institute.Institut_id = seminar_inst.Institut_id "
+            ."WHERE Seminar_id = ?";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($semid));
+        return $db->fetchAll();
+    }
+
+    public function getRoomToDate($terminid) {
+        $sql =  "SELECT ro.name AS raum "
+            ." FROM resources_objects as ro"
+            ." INNER JOIN resources_assign as ra ON ra.resource_id = ro.resource_id"
+            ." WHERE ra.assign_user_id = ?";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($terminid));
+        $result = $db->fetchAll();
+        return $result[0][0];
+    }
+
+    function getListDozenten($semid) {
+        $sql = "SELECT auth_user_md5.Vorname, auth_user_md5.Nachname FROM `seminar_user`
+                INNER JOIN auth_user_md5 on seminar_user.user_id = auth_user_md5.user_id
+                WHERE Seminar_id = ?
+                AND status='dozent'";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($semid));
+        $result = $db->fetchAll();
+        //Dozenten in die VL eintragen
+        foreach($result as $res) {
+            $dozenten .= $res["Vorname"]." ".$res["Nachname"]."<br/>";
+        }
+        return $dozenten;
+    }
 }
