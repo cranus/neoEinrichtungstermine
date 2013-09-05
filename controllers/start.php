@@ -1,21 +1,39 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: johannesstichler
- * Date: 24.04.13
- * Time: 10:20
- * To change this template use File | Settings | File Templates.
+ * Datei ist Teil neoEinrichtungstermine
+ * Erstellt von: johannes.stichler
+ * Datum: 01.08.13
+ * The MIT License (MIT)
+ *
+ * Copyright (c) 2013 Johannes Stichler
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of
+ * this software and associated documentation files (the "Software"), to deal in
+ * the Software without restriction, including without limitation the rights to
+ * use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+ * the Software, and to permit persons to whom the Software is furnished to do so,
+ * subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+ * FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+ * COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+ * IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+ * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 require_once 'app/controllers/authenticated_controller.php';
 require_once dirname(__FILE__).'/../modells/vldaten.php';
 require_once 'lib/calendar/CalendarColumn.class.php';
 require_once 'lib/calendar/CalendarView.class.php';
+require_once 'ajax.php';
 class startController extends \StudipController {
 	function before_filter(&$action, &$args)
 	{
 		$this->flash = Trails_Flash::instance();
-		// set default layout
-		$layout = $GLOBALS['template_factory']->open('layouts/base');
+        $layout = $GLOBALS['template_factory']->open('layouts/base');
 		//$layout =  "ajax/layout";
 		$this->set_layout($layout);
 		$this->instid = (!empty($_GET["cid"]) ? $_GET["cid"] : (empty($SessSemName[1]) ? $_GET["auswahl"] : $SessSemName[1]));
@@ -23,7 +41,6 @@ class startController extends \StudipController {
 	}
 
 	public function index_action() {
-
 		$day = $this->getDate();
 		$this->instid = $this->flash->instid;
         $inst = new Institute($this->instid);
@@ -54,8 +71,6 @@ class startController extends \StudipController {
 			);
 		}
 		$this->plan = $this->renderPlan($entry);
-
-
 	}
 
 
@@ -83,7 +98,6 @@ class startController extends \StudipController {
 				'onClick' => "function() { showdetails('".$t["termin_id"]."');}"
 			);
 		}
-		//$this->debug = $this->flash->debug;
 		$this->plan = $this->renderPlan($entry, "day");
 
 	}
@@ -173,7 +187,4 @@ class startController extends \StudipController {
 		else $day = time();
 		return $day;
 	}
-
-
-
 }

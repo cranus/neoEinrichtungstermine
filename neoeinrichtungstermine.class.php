@@ -40,7 +40,9 @@ class neoeinrichtungstermine  extends \StudipPlugin implements \SystemPlugin {
 			if($this->checkInstitute($this->instid)) {
 				$navigation = new AutoNavigation(_("Einrichtungstermine"), PluginEngine::getURL($this, array(), "start"));
 				Navigation::addItem('/course/insttermin', clone $navigation);
-				Navigation::addItem('/insttermin', clone $navigation);
+                //$navigation = new AutoNavigation(_("Einrichtungstermine"), PluginEngine::getURL($this, array(), "start/index"));
+                //Navigation::addItem('/course/insttermin', clone $navigation);
+                //Navigation::addItem('/insttermin', clone $navigation);
 				$navday = new AutoNavigation(_("Tag"), PluginEngine::getURL($this, array(), "start/dayview"));
 				Navigation::addItem('/course/insttermin/day', clone $navday);
 
