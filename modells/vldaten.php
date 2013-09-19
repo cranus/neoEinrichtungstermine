@@ -38,15 +38,20 @@ class vldaten {
 		$day = mktime('6','00','00', date("n", $day), date("j", $day), date("Y", $day));
 		$dayend = $day+86399;
 		$db = DBManager::get();
-		$sql = "SELECT * ".
+		$sql = "SELECT termine.termin_id, termine.content, termine.description, termine.date, termine.end_time, termine.date_typ, seminare.Name ".
 					"FROM `termine` ".
 					"INNER JOIN seminar_inst ON seminar_inst.seminar_id = termine.range_id ".
 					"INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
 					"WHERE seminar_inst.institut_id = '".$instid."' AND ".
-					"date BETWEEN ".$day." AND ".$dayend. " ";
-					"ORDER BY date ".
-					"LIMIT 30";
-
+					"date BETWEEN ".$day." AND ".$dayend. " ".
+					"".
+                    "UNION ".
+		            "SELECT ex_termine.termin_id, ex_termine.content, ex_termine.description, ex_termine.date, ex_termine.end_time, '6' AS date_typ, seminare.Name ".
+                    "FROM `ex_termine` ".
+                    "INNER JOIN seminar_inst ON seminar_inst.seminar_id = ex_termine.range_id ".
+                    "INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
+                    "WHERE seminar_inst.institut_id = '".$instid."' AND date BETWEEN ".$day." AND ".$dayend. " ".
+                    "AND ex_termine.content IS NOT NULL";
 		$termine = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 		return $termine;
 	}
@@ -71,9 +76,13 @@ class vldaten {
     public function getTerminInfos($terminid) {
         $sql = "SELECT termine.raum AS raum_frei, seminare.name, seminare.VeranstaltungsNummer, seminare.Seminar_id, termine.date, termine.end_time FROM `termine`
                 INNER JOIN seminare on seminare.Seminar_id = termine.range_id
-                WHERE termine.termin_id = ?";
+                WHERE termine.termin_id = ?".
+                " UNION ".
+                "SELECT ex_termine.raum AS raum_frei, seminare.name, seminare.VeranstaltungsNummer, seminare.Seminar_id, ex_termine.date, ex_termine.end_time FROM `ex_termine`
+                INNER JOIN seminare on seminare.Seminar_id = ex_termine.range_id
+                WHERE ex_termine.termin_id = ?";
         $db = DBManager::get()->prepare($sql);
-        $db->execute(array($terminid));
+        $db->execute(array($terminid,$terminid));
         return $result = $db->fetchAll();
     }
 
@@ -108,6 +117,7 @@ class vldaten {
         $db->execute(array($semid));
         $result = $db->fetchAll();
         //Dozenten in die VL eintragen
+        $dozenten = "";
         foreach($result as $res) {
             $dozenten .= $res["Vorname"]." ".$res["Nachname"]."<br/>";
         }
