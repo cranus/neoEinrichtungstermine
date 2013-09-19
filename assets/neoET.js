@@ -1,7 +1,11 @@
 function showdetails(id) {
+    url = window.location.pathname;
+    if(url.contains("/index") || url.contains("/dayview"))
+    { ajaxurl = "../ajax/details"; }
+    else ajaxurl = "./ajax/details";
     $.ajax({
         type: "POST",
-        url:"/neo/public/plugins.php/neoeinrichtungstermine/ajax/details", //ToDo auf Livesystem anpassen
+        url: ajaxurl,
         data: { cmd: "renderDetails", id: id }
     }).done(function(data) {
             $('#neoet_details').html(data);

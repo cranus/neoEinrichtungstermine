@@ -147,7 +147,7 @@ class startController extends \StudipController {
 		return $plaene;
 	}
 
-	public function DateTypToHuman($typ) {
+	public function DateTypToHuman($typ) { //TODO: Ausfall falsche Farbe!!!
 		switch($typ) {
 			case 1: $return = array("name"=>_("Vorlesung"), "sitzung"=>1, "color"=>"#2D2C64"); break;
 			case 2: $return = array("name"=>_("Vorbesprechung"), "sitzung"=>0, "color"=>"#5C2D64"); break;

@@ -46,6 +46,7 @@ class vldaten {
 					"date BETWEEN ".$day." AND ".$dayend. " ";
 					"ORDER BY date ".
 					"LIMIT 30";
+
 		$termine = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 		return $termine;
 	}
