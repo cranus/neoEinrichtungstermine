@@ -38,7 +38,7 @@ class vldaten {
 		$day = mktime('6','00','00', date("n", $day), date("j", $day), date("Y", $day));
 		$dayend = $day+86399;
 		$db = DBManager::get();
-		$sql = "SELECT termine.termin_id, termine.content, termine.description, termine.date, termine.end_time, termine.date_typ, seminare.Name ".
+		$sql = "SELECT termine.termin_id, termine.content, termine.description, termine.date, termine.end_time, termine.date_typ, seminare.Name,  seminare.Seminar_id ".
 					"FROM `termine` ".
 					"INNER JOIN seminar_inst ON seminar_inst.seminar_id = termine.range_id ".
 					"INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
@@ -46,12 +46,12 @@ class vldaten {
 					"date BETWEEN ".$day." AND ".$dayend. " ".
 					"".
                     "UNION ".
-		            "SELECT ex_termine.termin_id, ex_termine.content, ex_termine.description, ex_termine.date, ex_termine.end_time, '6' AS date_typ, seminare.Name ".
+		            "SELECT ex_termine.termin_id, ex_termine.content, ex_termine.description, ex_termine.date, ex_termine.end_time, '6' AS date_typ, seminare.Name,  seminare.Seminar_id ".
                     "FROM `ex_termine` ".
                     "INNER JOIN seminar_inst ON seminar_inst.seminar_id = ex_termine.range_id ".
                     "INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
                     "WHERE seminar_inst.institut_id = '".$instid."' AND date BETWEEN ".$day." AND ".$dayend. " ".
-                    "AND ex_termine.content IS NOT NULL";
+                    "AND ex_termine.content <> ''";
 		$termine = $db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 		return $termine;
 	}
@@ -119,7 +119,9 @@ class vldaten {
         //Dozenten in die VL eintragen
         $dozenten = "";
         foreach($result as $res) {
-            $dozenten .= $res["Vorname"]." ".$res["Nachname"]."<br/>";
+            if(!empty($dozenten)) $dozenten .=", ";
+            $dozenten .= $res["Vorname"]." ".$res["Nachname"];
+
         }
         return $dozenten;
     }

@@ -57,7 +57,7 @@ class startController extends \StudipController {
 		$entry = array(1 => array() ,2 => array(),3 => array(),4 => array(),5 => array(),6 => array(),7 => array());
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
-			$name = $t["Name"]." - ".$typ["name"];
+			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"]));
 			$start = date("Hi", $t['date']);
 			$ende = date("Hi", $t['end_time']);
 			$weekday = date("N", $t['date']);
@@ -85,7 +85,7 @@ class startController extends \StudipController {
 		$termine = $vldaten->getAllVlsDay($day, $this->instid);
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
-			$name = $t["Name"]." - ".$typ["name"];
+			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"]));
 			$start = date("Hi", $t['date']);
 			$ende = date("Hi", $t['end_time']);
 			$weekday = date("N", $t['date']);
