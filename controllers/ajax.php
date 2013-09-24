@@ -39,21 +39,22 @@ class ajaxController extends \StudipController {
     }
 
     function getTermin() {
+        $vldata = new vldaten();
         //Allgemeine Infos
-        $result = vldaten::getTerminInfos($_REQUEST['id']);
+        $result = $vldata->getTerminInfos($_REQUEST['id']);
         $this->sem_name = $result[0]['name'];
         $this->sem_id = $result[0]['Seminar_id'];
         $this->start = date("d.m.Y, H:i",$result[0]['date']);
         $this->ende = date("d.m.Y, H:i",$result[0]['end_time']);
 
         // Raum auslesen
-        $this->raum = vldaten::getRoomToDate($this->flash->id);
+        $this->raum = $vldata->getRoomToDate($_REQUEST['id']);
         // Dozenten auslesen
-        $this->dozenten = vldaten::getListDozenten($this->sem_id);
+        $this->dozenten = $vldata->getListDozenten($this->sem_id);
         // Einrichtungen
 
-        $result = vldaten::getInstituteBySemid($this->semid);
-        //Dozenten in die VL eintragen
+
+        $result = $vldata->getInstituteBySemid($this->sem_id);
         foreach($result as $res) {
             $this->einrichtungen .= $res["Name"]."<br/>";
         }
