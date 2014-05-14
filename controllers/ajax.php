@@ -50,7 +50,7 @@ class ajaxController extends \StudipController {
         // Raum auslesen
         $this->raum = $vldata->getRoomToDate($_REQUEST['id']);
         // Dozenten auslesen
-        $this->dozenten = $vldata->getListDozenten($this->sem_id);
+        $this->dozenten = $vldata->getListDozenten($this->sem_id,$_REQUEST['id']);
         // Einrichtungen
 
 

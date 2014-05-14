@@ -57,7 +57,7 @@ class startController extends \StudipController {
 		$entry = array(1 => array() ,2 => array(),3 => array(),4 => array(),5 => array(),6 => array(),7 => array());
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
-			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"]));
+			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"],$t["termin_id"]));
 			$start = date("Hi", $t['date']);
 			$ende = date("Hi", $t['end_time']);
 			$weekday = date("N", $t['date']);
@@ -70,7 +70,7 @@ class startController extends \StudipController {
 				'onClick' => "function() {  showdetails('".$t["termin_id"]."');}"
 			);
 		}
-		$this->plan = $this->renderPlan($entry);
+		$this->plan = $this->renderPlan($entry, $montag);
 	}
 
 
@@ -85,7 +85,7 @@ class startController extends \StudipController {
 		$termine = $vldaten->getAllVlsDay($day, $this->instid);
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
-			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"]));
+			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"], $t["termin_id"]));
 			$start = date("Hi", $t['date']);
 			$ende = date("Hi", $t['end_time']);
 			$weekday = date("N", $t['date']);
@@ -98,48 +98,69 @@ class startController extends \StudipController {
 				'onClick' => "function() { showdetails('".$t["termin_id"]."');}"
 			);
 		}
-		$this->plan = $this->renderPlan($entry, "day");
+		$this->plan = $this->renderPlan($entry,$day, "day");
 
 	}
 
 
 
-	function renderPlan($termine, $plantyp = "week") {
+	function renderPlan($termine, $tag, $plantyp = "week") {
 		$plan = new CalendarView();
 		$plan->setRange("6","21");
+        $tag = intval($tag);
 
 
 		if(sizeof($termine[1]) > "0" OR $plantyp == "week") {
-			$plan->addColumn(_('Montag'));
+			if($plantyp == "week") $plan->addColumn(_('Montag ('.strftime("%d.%m",$tag).')'));
+            if($plantyp == "day") $plan->addColumn(_('Montag ('.$tag.')'));
 			foreach($termine[1] as $date) $plan->addEntry($date);
 		}
 
 
 		if(sizeof($termine[2]) > "0" OR $plantyp == "week") {
-			$plan->addColumn(_('Dienstag'));
+            if($plantyp == "week") {
+                $t =  $tag + 86400;
+                $plan->addColumn(_('Dienstag ('.strftime("%d.%m",$t).')'));
+            } elseif($plantyp == "day") $plan->addColumn(_('Dienstag ('.$tag.')'));
 			foreach($termine[2] as $date) $plan->addEntry($date);
 		}
 
 		if(sizeof($termine[3]) > "0" OR $plantyp == "week") {
-			$plan->addColumn(_('Mittwoch'));
+            if($plantyp == "week") {
+                $t =  $tag+(86400*2);
+                $plan->addColumn(_('Mittwoch ('.strftime("%d.%m",$t).')'));
+            }
+            if($plantyp == "day") $plan->addColumn(_('Mittwoch ('.$tag.')'));
 			foreach($termine[3] as $date) $plan->addEntry($date);
 		}
 
 
 		if(sizeof($termine[4]) > "0" OR $plantyp == "week") {
-			$plan->addColumn(_('Donnerstag'));
+            if($plantyp == "week") {
+                $t =  $tag+(86400*3);
+                $plan->addColumn(_('Donnerstag ('.strftime("%d.%m",$t).')'));
+            }
+            if($plantyp == "day") $plan->addColumn(_('Donnerstag ('.$tag.')'));
 			foreach($termine[4] as $date) 	$plan->addEntry($date);
 		}
 
 
 		if(sizeof($termine[5]) > "0" OR $plantyp == "week") {
-			$plan->addColumn(_('Freitag'));
+            if($plantyp == "week") {
+                $t =  $tag+(86400*4);
+                $plan->addColumn(_('Freitag ('.strftime("%d.%m",$t).')'));
+            }
+            if($plantyp == "day") $plan->addColumn(_('Freitag ('.$tag.')'));
 			foreach($termine[5] as $date)  $plan->addEntry($date);
 
 		}
 
 		if(sizeof($termine[6]) > "0") {
-			$plan->addColumn(_('Samstag'));
+            if($plantyp == "week") {
+                $t =  $tag+(86400*5);
+                $plan->addColumn(_('Samstag ('.strftime("%A - %d.%m.%G",$t)).')');
+            }
+            if($plantyp == "day") $plan->addColumn(_('Samstag ('.$tag.')'));
 			foreach($termine[6] as $date) $plan->addEntry($date);
 		}
 		$plaene =  $plan->render();

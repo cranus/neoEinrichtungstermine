@@ -1,6 +1,6 @@
 function showdetails(id) {
     url = window.location.pathname;
-    if(url.contains("/index") || url.contains("/dayview"))
+    if(url.indexOf('index') > -1 || url.indexOf('/dayview') > -1 )
     { ajaxurl = "../ajax/details"; }
     else ajaxurl = "./ajax/details";
     $.ajax({

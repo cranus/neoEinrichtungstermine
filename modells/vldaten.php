@@ -37,12 +37,16 @@ class vldaten {
 		if(!$day) $day = time();
 		$day = mktime('6','00','00', date("n", $day), date("j", $day), date("Y", $day));
 		$dayend = $day+86399;
+        if($this->perm["root"]) $visible = "%";
+        else $visible = "1";
+        print_r($this->flash->perm);
 		$db = DBManager::get();
 		$sql = "SELECT termine.termin_id, termine.content, termine.description, termine.date, termine.end_time, termine.date_typ, seminare.Name,  seminare.Seminar_id ".
 					"FROM `termine` ".
 					"INNER JOIN seminar_inst ON seminar_inst.seminar_id = termine.range_id ".
 					"INNER JOIN seminare ON seminare.Seminar_id = seminar_inst.seminar_id ".
 					"WHERE seminar_inst.institut_id = '".$instid."' AND ".
+                    "seminare.visible = '".$visible."' AND ".
 					"date BETWEEN ".$day." AND ".$dayend. " ".
 					"".
                     "UNION ".
@@ -108,8 +112,8 @@ class vldaten {
         return $result[0][0];
     }
 
-    function getListDozenten($semid) {
-        $sql = "SELECT auth_user_md5.Vorname, auth_user_md5.Nachname FROM `seminar_user`
+    function getListDozenten($semid, $terminid) {
+        $sql = "SELECT auth_user_md5.user_id, auth_user_md5.Vorname, auth_user_md5.Nachname FROM `seminar_user`
                 INNER JOIN auth_user_md5 on seminar_user.user_id = auth_user_md5.user_id
                 WHERE Seminar_id = ?
                 AND status='dozent'";
@@ -119,8 +123,22 @@ class vldaten {
         //Dozenten in die VL eintragen
         $dozenten = "";
         foreach($result as $res) {
-            if(!empty($dozenten)) $dozenten .=", ";
-            $dozenten .= $res["Vorname"]." ".$res["Nachname"];
+            $sql = "SELECT COUNT(*) "
+                . "FROM `termin_related_persons` WHERE range_id = ? AND user_id = ?";
+            $db = DBManager::get()->prepare($sql);
+            $db->execute(array($terminid,$res["user_id"]));
+            $res2 = $db->fetch();
+            echo $semid." ".$res["user_id"]."<br />";
+            $sql = "SELECT COUNT(*) "
+                . "FROM `termin_related_persons` WHERE range_id = ?";
+            $db = DBManager::get()->prepare($sql);
+            $db->execute(array($terminid));
+            $res3 = $db->fetch();
+            if($res2[0] > 0 OR $res3[0] == 0 ) {
+                if(!empty($dozenten)) $dozenten .=", ";
+                $dozenten .= $res["Vorname"]." ".$res["Nachname"];
+            }
+
 
         }
         return $dozenten;
