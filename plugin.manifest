@@ -3,5 +3,5 @@ pluginclassname=neoeinrichtungstermine
 origin=neo
 version=0.6
 description=Anzeige der Termine die in einer Einrichtung stattfindet
-studipMinVersion=2.4
+studipMinVersion=2.5
 install=
