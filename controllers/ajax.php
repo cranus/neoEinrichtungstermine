@@ -52,11 +52,12 @@ class ajaxController extends \StudipController {
         // Dozenten auslesen
         $this->dozenten = $vldata->getListDozenten($this->sem_id,$_REQUEST['id']);
         // Einrichtungen
-
-
         $result = $vldata->getInstituteBySemid($this->sem_id);
         foreach($result as $res) {
             $this->einrichtungen .= $res["Name"]."<br/>";
         }
+        //Beteiligte Gruppen
+        $this->gruppen = $vldata->getRelatedGroups($_REQUEST['id']);
+
     }
 }

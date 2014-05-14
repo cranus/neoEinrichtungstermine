@@ -1,6 +1,7 @@
 <h2>Details zum Termin</h2> <br/>
 <strong>Name der Veranstaltung</strong>: <?= utf8_encode($sem_name) ?> <br/>
 <strong>Dozent</strong>: <br/> <?= utf8_encode($dozenten) ?><br/>
+<strong>Beteiligte Gruppen: </strong>: <br/> <?= utf8_encode($gruppen) ?><br/>
 <strong>Raum</strong>:<?=  $raum ?><br/>
 <strong>Start</strong>:<?=  $start ?><br/>
 <strong>Ende</strong>:<?=  $ende ?><br/>

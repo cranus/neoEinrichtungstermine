@@ -138,9 +138,19 @@ class vldaten {
                 if(!empty($dozenten)) $dozenten .=", ";
                 $dozenten .= $res["Vorname"]." ".$res["Nachname"];
             }
-
-
         }
         return $dozenten;
+    }
+
+    function getRelatedGroups($terminid) {
+        $sql = "SELECT name FROM statusgruppen WHERE statusgruppe_id IN (SELECT statusgruppe_id from termin_related_groups WHERE termin_id = ?)";
+        $db = DBManager::get()->prepare($sql);
+        $db->execute(array($terminid));
+        $result = $db->fetchAll();
+        foreach($result as $r) {
+            if(!empty($grp)) $grp .= ", ";
+            $grp .= $r["name"];
+        }
+        return $grp;
     }
 }
