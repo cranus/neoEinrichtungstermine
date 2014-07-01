@@ -57,8 +57,17 @@ class startController extends \StudipController {
 		$entry = array(1 => array() ,2 => array(),3 => array(),4 => array(),5 => array(),6 => array(),7 => array());
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
-			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"],$t["termin_id"]));
-			$start = date("Hi", $t['date']);
+            //Titel zusammensetzen:
+            $title = $t["Name"];
+            $title .= " (".$typ["name"].")";
+            $raum = $vldaten->getRoomToDate($t["termin_id"]);
+            if(!empty($raum)) $title .= " ".$raum;
+            $title .= " - ".$vldaten->getListDozenten($t["Seminar_id"], $t["termin_id"]);
+            $grps = $vldaten->getRelatedGroups($t["termin_id"]);
+            if(!empty($grps)) $title .= " - ".$grps;
+            //$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"], $t["termin_id"])." - ".$vldaten->getRelatedGroups($t["termin_id"]));
+            $name = htmlReady($title);
+            $start = date("Hi", $t['date']);
 			$ende = date("Hi", $t['end_time']);
 			$weekday = date("N", $t['date']);
 			$entry[$weekday][] = array(
@@ -85,8 +94,16 @@ class startController extends \StudipController {
 		$termine = $vldaten->getAllVlsDay($day, $this->instid);
 		foreach($termine as $t) {
 			$typ = $this->DateTypToHuman($t["date_typ"]);
-			$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"], $t["termin_id"]));
-			$start = date("Hi", $t['date']);
+            //Titel zusammensetzen:
+            $title = $t["Name"];
+            $title .= " (".$typ["name"].")";
+            $raum = $vldaten->getRoomToDate($t["termin_id"]);
+            if(!empty($raum)) $title .= " ".$raum;
+            $title .= " - ".$vldaten->getListDozenten($t["Seminar_id"], $t["termin_id"]);
+            echo $vldaten->getRelatedGroups($t["termin_id"]);
+			//$name = htmlReady($t["Name"]." - ".$typ["name"]." - ".$vldaten->getRoomToDate($t["termin_id"])." - ".$vldaten->getListDozenten($t["Seminar_id"], $t["termin_id"])." - ".$vldaten->getRelatedGroups($t["termin_id"]));
+			$name = htmlReady($title);
+            $start = date("Hi", $t['date']);
 			$ende = date("Hi", $t['end_time']);
 			$weekday = date("N", $t['date']);
 			$entry[$weekday][] = array(
@@ -199,9 +216,9 @@ class startController extends \StudipController {
 	private function getDate() {
 		if(isset($_REQUEST["day"])) {
 			if($_REQUEST["datum"]) {
-				$day = $this->DatumToDate($_REQUEST["datum"])+($_REQUEST["day"]*86400);
+				$day = $this->DatumToDate($_REQUEST["datum"])+($_REQUEST["day"]*90000);
 			}
-			else $day = time()+($_REQUEST["day"]*86400);
+			else $day = time()+($_REQUEST["day"]*90000);
 
 		}
 		elseif($_REQUEST["datum"]) $day = $this->DatumToDate($_REQUEST["datum"]);

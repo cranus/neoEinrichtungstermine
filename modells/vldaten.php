@@ -39,7 +39,6 @@ class vldaten {
 		$dayend = $day+86399;
         if($this->perm["root"]) $visible = "%";
         else $visible = "1";
-        print_r($this->flash->perm);
 		$db = DBManager::get();
 		$sql = "SELECT termine.termin_id, termine.content, termine.description, termine.date, termine.end_time, termine.date_typ, seminare.Name,  seminare.Seminar_id ".
 					"FROM `termine` ".
@@ -128,7 +127,6 @@ class vldaten {
             $db = DBManager::get()->prepare($sql);
             $db->execute(array($terminid,$res["user_id"]));
             $res2 = $db->fetch();
-            echo $semid." ".$res["user_id"]."<br />";
             $sql = "SELECT COUNT(*) "
                 . "FROM `termin_related_persons` WHERE range_id = ?";
             $db = DBManager::get()->prepare($sql);
